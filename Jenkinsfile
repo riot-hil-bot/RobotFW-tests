@@ -35,7 +35,7 @@ pipeline {
         stage('setup master') {
             steps {
                 stepCheckoutRobotFWTests()
- /*                stepCheckoutRIOT()
+                stepCheckoutRIOT()
 
                 stepGetBoards()
                 stepGetTests()
@@ -59,7 +59,7 @@ pipeline {
         }
         stage('compile results') {
             steps {
-                stepCompileResults() */
+                stepCompileResults()
             }
         }
     }
