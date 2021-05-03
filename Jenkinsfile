@@ -35,7 +35,7 @@ pipeline {
         stage('setup master') {
             steps {
                 stepCheckoutRobotFWTests()
-                stepCheckoutRIOT()
+ /*                stepCheckoutRIOT()
 
                 stepGetBoards()
                 stepGetTests()
@@ -59,7 +59,7 @@ pipeline {
         }
         stage('compile results') {
             steps {
-                stepCompileResults()
+                stepCompileResults() */
             }
         }
     }
@@ -68,12 +68,36 @@ pipeline {
 /* master steps ============================================================= */
 
 def stepCheckoutRobotFWTests() {
-    checkout([
-              $class: 'GitSCM',
-              branches: [[name: "refs/heads/master"]],
-              userRemoteConfigs: [[url: "https://github.com/RIOT-OS/RobotFW-tests.git",
-                                   credentialsId: 'github_token']]
-    ])
+    pr = env.CHANGE_ID
+    url = "https://github.com/RIOT-OS/RobotFW-tests.git"
+    branch = env.BRANCH_NAME
+    if (pr != "") {
+        sh 'git config --global user.name "riot-hil-bot"'
+        sh 'git config --global user.email "riot-hil-bot@haw-hamburg.de"'
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: "pr/${pr}"]],
+            extensions: [[$class: 'RelativeTargetDirectory',
+                          relativeTargetDir: dir],
+                         [$class: "PreBuildMerge",
+                          options: [mergeTarget: "master",
+                                    mergeRemote: "origin"]]],
+            userRemoteConfigs: [[url: url,
+                                 refspec: "+refs/pull/${pr}/head:refs/remotes/origin/pr/${pr}",
+                                 credentialsId: 'github_token']]
+        ])
+
+    }
+    else {
+        checkout([
+            $class: 'GitSCM',
+            branches: [[name: "${branch}"]],
+            extensions: [[$class: 'RelativeTargetDirectory',
+                          relativeTargetDir: dir]],
+            userRemoteConfigs: [[url: url,
+                                 credentialsId: 'github_token']]
+        ])
+    }
 }
 
 def stepCheckoutRIOT() {
@@ -327,4 +351,3 @@ def stepArchiveTestResults(test)
     archiveArtifacts artifacts: "${base_dir}*.xml", allowEmptyArchive: true
     junit testResults: "${base_dir}xunit.xml", allowEmptyResults: true
 }
-
