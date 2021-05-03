@@ -20,11 +20,11 @@ Verify GPIO Pin Is Connected Continue
     API Call Should Succeed     GPIO Set           ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_gpio}
-    Should Be Equal             ${RESULT['data']}  ${1}
+    Should Be Equal             ${RESULT['data']}  ${1}  ${phil_gpio} (${dut_port}.${dut_pin}) could not toggle to high, Check wiring
     API Call Should Succeed     GPIO Clear         ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_gpio}
-    Should Be Equal             ${RESULT['data']}  ${0}
+    Should Be Equal             ${RESULT['data']}  ${0}  ${phil_gpio} (${dut_port}.${dut_pin}) could not toggle to low, Check wiring
 
 
 Verify Periph Pin Is Connected
@@ -46,8 +46,8 @@ Verify Periph Pin Is Connected Continue
     API Call Should Succeed     GPIO Set           ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_periph}.${phil_gpio}.level
-    Should Be Equal             ${RESULT['data']}  ${1}
+    Should Be Equal             ${RESULT['data']}  ${1}  ${phil_periph} (${dut_port}.${dut_pin}) could not toggle to high, Check wiring
     API Call Should Succeed     GPIO Clear         ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_periph}.${phil_gpio}.level
-    Should Be Equal             ${RESULT['data']}  ${0}
+    Should Be Equal             ${RESULT['data']}  ${0}  ${phil_periph} (${dut_port}.${dut_pin}) could not toggle to low, Check wiring
