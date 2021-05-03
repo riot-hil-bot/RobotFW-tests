@@ -71,6 +71,7 @@ def stepCheckoutRobotFWTests() {
     pr = env.CHANGE_ID
     url = "https://github.com/RIOT-OS/RobotFW-tests.git"
     branch = env.BRANCH_NAME
+    dir = '.'
     if (pr != "") {
         sh 'git config --global user.name "riot-hil-bot"'
         sh 'git config --global user.email "riot-hil-bot@haw-hamburg.de"'
