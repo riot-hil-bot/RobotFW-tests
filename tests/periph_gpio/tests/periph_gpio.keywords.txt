@@ -9,32 +9,32 @@ ${hw_update_time}   0.1
 
 *** Keywords ***
 Verify GPIO Pin Is Connected
-    [Arguments]                 ${phil_gpio}       ${dut_port}   ${dut_pin}
-    Run Keyword Unless          '${dut_port}' == ''  Verify GPIO Pin Is Connected Continue
-    ...                         ${phil_gpio}    ${dut_port}     ${dut_pin}
-    Skip If                     '${dut_port}' == ''  This pin is not supported for this board
+    [Arguments]                     ${phil_gpio}    ${dut_port}     ${dut_pin}
+    Skip if                         '${dut_port}' == ''  This pin is not supported for this board
+    Verify GPIO Pin Is Connected    ${phil_gpio}    ${dut_port}     ${dut_pin}
 
-Verify GPIO Pin Is Connected Continue
+
+Verify GPIO Pin Is Connected
     [Documentation]             Verify DUT pin is connected to PHiLIP pin with toggle.
     [Arguments]                 ${phil_gpio}       ${dut_port}   ${dut_pin}
     API Call Should Succeed     GPIO Set           ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_gpio}
-    Should Be Equal             ${RESULT['data']}  ${1}
+    Should Be Equal             ${RESULT['data']}  ${1}  ${phil_gpio} (${dut_port}.${dut_pin}) could not toggle to high, Check wiring
     API Call Should Succeed     GPIO Clear         ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_gpio}
-    Should Be Equal             ${RESULT['data']}  ${0}
+    Should Be Equal             ${RESULT['data']}  ${0}  ${phil_gpio} (${dut_port}.${dut_pin}) could not toggle to low, Check wiring
 
 
 Verify Periph Pin Is Connected
-    [Arguments]                 ${phil_periph}      ${phil_gpio}    ${dut_port}     ${dut_pin}
-    Run Keyword Unless          '${dut_port}' == ''  Verify Periph Pin Is Connected Continue
-    ...                         ${phil_periph}      ${phil_gpio}    ${dut_port}     ${dut_pin}
-    Skip If                     '${dut_port}' == ''  This pin is not supported for this board
+    [Arguments]                     ${phil_periph}  ${phil_gpio}    ${dut_port}     ${dut_pin}
+    Skip If                         '${dut_port}' == ''  This pin is not supported for this board
+    Verify Periph Pin Is Connected  ${phil_periph}  ${phil_gpio}    ${dut_port}     ${dut_pin}
 
 
-Verify Periph Pin Is Connected Continue
+
+Verify Periph Pin Is Connected
     [Documentation]             Verify Periph Pin connected to PHiLIP with toggle.
     [Arguments]                 ${phil_periph}      ${phil_gpio}    ${dut_port}     ${dut_pin}
     API Call Should Succeed     PHiLIP.Write Reg    ${phil_periph}.mode.disable         1
@@ -46,8 +46,8 @@ Verify Periph Pin Is Connected Continue
     API Call Should Succeed     GPIO Set           ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_periph}.${phil_gpio}.level
-    Should Be Equal             ${RESULT['data']}  ${1}
+    Should Be Equal             ${RESULT['data']}  ${1}  ${phil_periph} (${dut_port}.${dut_pin}) could not toggle to high, Check wiring
     API Call Should Succeed     GPIO Clear         ${dut_port}   ${dut_pin}
     Sleep                       ${hw_update_time}
     API Call Should Succeed     PHiLIP.Read Reg    ${phil_periph}.${phil_gpio}.level
-    Should Be Equal             ${RESULT['data']}  ${0}
+    Should Be Equal             ${RESULT['data']}  ${0}  ${phil_periph} (${dut_port}.${dut_pin}) could not toggle to low, Check wiring
