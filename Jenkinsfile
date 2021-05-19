@@ -495,12 +495,13 @@ def flashAndRFTestNodes(results)
             println(results)
         }
         for (def test in mapToList(results[env.BOARD])) {
-            
+            println(test)
             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE',
                         catchInterruptions: false) {
                 if (test.value["support"]) {
                     if (test.value['build']) {
                         stage("${test.key}") {
+                            println("do I get here?")
                             unstashBinaries(test.key)
                             /* No need to reset as flashing and the test should manage
                             * this */
