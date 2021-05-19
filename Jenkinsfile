@@ -492,8 +492,10 @@ def flashAndRFTestNodes(results)
     catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE', catchInterruptions: false) {
         stage( "${env.BOARD} setup on  ${env.NODE_NAME}"){
             unstashRobotFWTests()
+            println(results)
         }
         for (def test in mapToList(results[env.BOARD])) {
+            
             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE',
                         catchInterruptions: false) {
                 if (test.value["support"]) {
