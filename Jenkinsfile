@@ -176,7 +176,7 @@ def helperCheckoutRepo(url='', pr='', branch='', dir='.', owner='', repo='') {
         assert repo != ''
         url = "https://github.com/${owner}/${repo}.git"
     }
-    if (pr != "") {
+    if (pr != "" && pr != null) {
         sh 'git config --global user.name "riot-hil-bot"'
         sh 'git config --global user.email "riot-hil-bot@haw-hamburg.de"'
         chk = checkout([
