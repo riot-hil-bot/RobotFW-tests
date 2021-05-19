@@ -50,7 +50,6 @@ pipeline {
         }
         stage('node test') {
             steps {
-                echo "HI"
                 runParallel items: nodeBoards.collect { "${it}" }
             }
         }
@@ -94,7 +93,7 @@ def stepStashRobotFWTests() {
 def stepMultiBranchCompileResults()
 {
     ret = sh script: '''
-HIL_JOB_NAME=$(echo ${JOB_NAME}| cut -d'/' -f 1)
+        HIL_JOB_NAME=$(echo ${JOB_NAME}| cut -d'/' -f 1)
         HIL_BRANCH_NAME=$(echo $JOB_NAME| cut -d'/' -f 2)
         HIL_BRANCH_NAME=$(echo $HIL_BRANCH_NAME | sed 's/%2F/-/g')
         HIL_BRANCH_NAME=$(echo $HIL_BRANCH_NAME | sed 's/_/-/g')
@@ -493,18 +492,13 @@ def flashAndRFTestNodes(results)
     catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE', catchInterruptions: false) {
         stage( "${env.BOARD} setup on  ${env.NODE_NAME}"){
             unstashRobotFWTests()
-            println(results)
-            println(results[env.BOARD])
-            println(mapToList(results[env.BOARD]))
         }
         for (def test in mapToList(results[env.BOARD])) {
-            println(test)
             catchError(buildResult: 'UNSTABLE', stageResult: 'FAILURE',
                         catchInterruptions: false) {
                 if (test.value["support"]) {
                     if (test.value['build']) {
                         stage("${test.key}") {
-                            println("do I get here?")
                             unstashBinaries(test.key)
                             /* No need to reset as flashing and the test should manage
                             * this */
