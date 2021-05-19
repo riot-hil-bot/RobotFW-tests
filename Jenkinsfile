@@ -50,6 +50,7 @@ pipeline {
         }
         stage('node test') {
             steps {
+                echo "HI"
                 runParallel items: nodeBoards.collect { "${it}" }
             }
         }
@@ -493,6 +494,8 @@ def flashAndRFTestNodes(results)
         stage( "${env.BOARD} setup on  ${env.NODE_NAME}"){
             unstashRobotFWTests()
             println(results)
+            println(results[env.BOARD])
+            println(mapToList(results[env.BOARD]))
         }
         for (def test in mapToList(results[env.BOARD])) {
             println(test)
